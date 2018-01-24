@@ -25,6 +25,7 @@ class ViewController: UIViewController ,UITableViewDelegate , UITableViewDataSou
         tableView.dataSource = self
         tableView.delegate = self
         
+        //Get User Profile results
         DispatchQueue.global(qos: .background).async {
             self.GetUserProfileResults()
         }
@@ -40,6 +41,7 @@ class ViewController: UIViewController ,UITableViewDelegate , UITableViewDataSou
         APIManager.sharedInstance.GETRequest(success: { (results, statusCode) in
             if let data = results.data{
                 self.listItems = data
+                //Reload results on Main thread
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
                 }
