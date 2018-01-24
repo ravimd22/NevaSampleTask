@@ -13,18 +13,21 @@ class ViewController: UIViewController ,UITableViewDelegate , UITableViewDataSou
     @IBOutlet weak var tableView: UITableView!
     
      var listItems : [UserProfileInfoModel] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Do any additional setup after loading the view, typically from a nib.
         tableView.register(UINib(nibName: "UserProfileTableViewCell", bundle: nil), forCellReuseIdentifier: "UserProfileTableViewCell")
         self.tableView.tableFooterView = UIView(frame:CGRect.zero)
-        
         self.tableView.estimatedRowHeight=80
         self.tableView.rowHeight = UITableViewAutomaticDimension
         tableView.dataSource = self
         tableView.delegate = self
-        self.GetUserProfileResults()
         
+        DispatchQueue.global(qos: .background).async {
+            self.GetUserProfileResults()
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -36,7 +39,6 @@ class ViewController: UIViewController ,UITableViewDelegate , UITableViewDataSou
         
         APIManager.sharedInstance.GETRequest(success: { (results, statusCode) in
             if let data = results.data{
-                print("data",data)
                 self.listItems = data
                 DispatchQueue.main.async {
                     self.tableView.reloadData()
